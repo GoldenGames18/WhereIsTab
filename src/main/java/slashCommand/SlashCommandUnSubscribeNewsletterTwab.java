@@ -21,9 +21,11 @@ public class SlashCommandUnSubscribeNewsletterTwab extends ListenerAdapter {
         if (event.getName().equals("unsubscribe")) {
             event.deferReply().queue();
             try {
-                if (this.newsletterTwab.containsValue(event.getChannel().getId())){
-                    if (this.newsletterTwab.remove(event.getGuild().getId(), event.getChannel().getId()))
-                        event.getHook().sendMessage("You are unsubscribed from the newsletter").setEphemeral(true).queue();
+                if (this.newsletterTwab.containsKey(event.getGuild().getId())){
+                    String value = newsletterTwab.get(event.getGuild().getId());
+                    System.out.println(value);
+                    if (newsletterTwab.remove(event.getGuild().getId(), value))
+                        event.getHook().sendMessage("Your server are unsubscribed from the newsletter").setEphemeral(true).queue();
                     else
                         event.getHook().sendMessage("An error has occurred").setEphemeral(true).queue();
                 }else{

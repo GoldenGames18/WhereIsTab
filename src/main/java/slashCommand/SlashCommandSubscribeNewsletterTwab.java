@@ -18,11 +18,11 @@ public class SlashCommandSubscribeNewsletterTwab extends ListenerAdapter {
         if(event.getName().equals("subscribe")){
             event.deferReply().queue();
             try{
-                if (this.newsletterTwab.contains(event.getChannel().getId())){
-                    event.getHook().sendMessage("Are you already registered").setEphemeral(true).queue();
+                if (this.newsletterTwab.containsKey(event.getGuild().getId())){
+                    event.getHook().sendMessage("You are already registered").setEphemeral(true).queue();
                 }else{
                     this.newsletterTwab.put(Objects.requireNonNull(event.getGuild()).getId(), event.getChannel().getId());
-                    event.getHook().sendMessage("Your are subscribe to the newsletter. All articles will be posted here").setEphemeral(true).queue();
+                    event.getHook().sendMessage("Your server are subscribe to the newsletter. All articles will be posted here").setEphemeral(true).queue();
                 }
             }catch (NullPointerException e){
                 event.getHook().sendMessage("An error has occurred").setEphemeral(true).queue();

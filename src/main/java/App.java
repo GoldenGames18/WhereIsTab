@@ -9,19 +9,20 @@ import net.dv8tion.jda.api.entities.Activity;
 import slashCommand.SlashCommandPing;
 import slashCommand.SlashCommandSubscribeNewsletterTwab;
 import slashCommand.SlashCommandUnSubscribeNewsletterTwab;
+import src.SearchArticles;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 public class App {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
 
         //Register to the newsletter
         ConcurrentHashMap<String, String> newsletterTwab = new ConcurrentHashMap<>();
 
 
-
-        try{
+        SearchArticles searchArticles = null;
+        try {
             //Load api key and discord token
             TomlRepository repository = new TomlRepository();
 
@@ -33,23 +34,29 @@ public class App {
                             new SlashCommandUnSubscribeNewsletterTwab(newsletterTwab))
                     .build().awaitReady();
 
+            searchArticles = new SearchArticles(newsletterTwab, repository.getApiKey(), jda);
+            new Thread(searchArticles).start();
 
             //Display of commands for each server
-            for ( Guild server : jda.getGuilds()){
+            for (Guild server : jda.getGuilds()) {
                 server.updateCommands().addCommands(
                         Commands.slash("ping", "Ping the bot !"),
-                        Commands.slash("subscribe", "Subscribe to the newsletter to read the latest articles from Bungie")
+                        Commands.slash("subscribe", "Subscribe the server to the newsletter to read the latest articles from Bungie")
                                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR)),
-                        Commands.slash("unsubscribe", "Unsubscribe from the Bungie newsletter" )
+                        Commands.slash("unsubscribe", "Unsubscribe the server from the Bungie newsletter")
                                 .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR))
                 ).queue();
 
             }
 
+
+
         } catch (InterruptedException e) {
             System.err.println("[ERROR] : The bot is stop");
-        }catch (Exception e){
+            searchArticles.stop();
+        } catch (Exception e) {
             System.err.println("[ERROR]");
+            searchArticles.stop();
         }
 
 
