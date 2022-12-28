@@ -25,19 +25,18 @@ public class SearchArticles implements Runnable{
 
     private HttpsURLConnection connection;
 
-    public SearchArticles(ConcurrentHashMap<String, String> newsletterTwab, String apiKey, JDA jda) {
+    public SearchArticles(ConcurrentHashMap<String, String> newsletterTwab, String apiKey) {
         this.newsletterTwab = newsletterTwab;
         this.apiKey = apiKey;
-        this.jda = jda;
         try{
             this.url = new URL("https://www.bungie.net/platform/Content/Rss/NewsArticles/0");
             this.isRunning = true;
         }catch (MalformedURLException  e){
             this.isRunning = false;
         }
-
-
-
+    }
+    public void setJda(JDA jda) {
+        this.jda = jda;
     }
 
     public void stop(){
@@ -47,7 +46,7 @@ public class SearchArticles implements Runnable{
 
 
     private int createConnection() throws IOException {
-        this.connection = (HttpsURLConnection) url.openConnection();
+        this.connection = (HttpsURLConnection) this.url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("X-API-KEY", this.apiKey);
         return connection.getResponseCode();
@@ -94,8 +93,8 @@ public class SearchArticles implements Runnable{
                             builder.setTitle( new String(result.getAsJsonObject().get("Title").getAsString().getBytes(), StandardCharsets.UTF_8) ,String.format("https://www.bungie.net%s", article));
                             builder.setDescription( new String(result.getAsJsonObject().get("Description").getAsString().getBytes(), StandardCharsets.UTF_8) );
                             builder.setImage(result.getAsJsonObject().get("ImagePath").getAsString());
-                            newsletterTwab.forEach((key, value) -> {
-                                jda.getTextChannelById(value).sendMessage("").addEmbeds(builder.build()).queue();
+                            this.newsletterTwab.forEach((key, value) -> {
+                                this.jda.getTextChannelById(value).sendMessage("").addEmbeds(builder.build()).queue();
                             });
                             builder.clear();
                         }

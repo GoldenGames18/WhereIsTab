@@ -10,7 +10,7 @@ public class TomlRepository {
     public Toml config;
 
     public TomlRepository(){
-        config = new Toml().read( new File(System.getProperty("user.dir"),"config.toml" ));
+        config = new Toml().read( new File(System.getProperty("user.dir"),"resources/config.toml" ));
     }
 
     public String getToken(){
@@ -18,6 +18,7 @@ public class TomlRepository {
     }
 
     public String getApiKey(){return config.getString("bot.ApiKey");}
+    public String getJsonName(){return config.getString("bot.json");}
 
 
 }
