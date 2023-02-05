@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class App {
 
     public static void main(String[] args) {
-
         //Load api key and discord token
         TomlRepository repository = new TomlRepository();
 
@@ -27,7 +26,6 @@ public class App {
 
         SearchArticles searchArticles = new SearchArticles(newsletterTwab, repository.getApiKey());
         try {
-
             //Load json file with serveur is subscribe
             JsonRepository jsonRepository = new JsonRepository(System.getProperty("user.dir")+"\\resources\\"+ repository.getJsonName());
             newsletterTwab.putAll(  jsonRepository.loadSubscribel(newsletterTwab));
@@ -43,7 +41,6 @@ public class App {
                     .build().awaitReady();
             searchArticles.setJda(jda);
             new Thread(searchArticles).start();
-
             //Display of commands for each server
             for (Guild server : jda.getGuilds()) {
                 server.updateCommands().addCommands(
@@ -67,17 +64,8 @@ public class App {
                                 .addSubcommands(new SubcommandData("head", "Wish 12 adds an effect around the player's head."))
                                 .addSubcommands(new SubcommandData("petras-run", "Wish 13 enables Extinguish where if one player dies the entire fireteam goes to Orbit."))
                                 .addSubcommands(new SubcommandData("eggs", "Wish 14 spawns several Corrupted Eggs throughout the raid."))
-
-
-
-
-
                 ).queue();
-
             }
-
-
-
         } catch (InterruptedException e) {
             System.err.println("[ERROR] : The bot is stop");
             searchArticles.stop();
