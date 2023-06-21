@@ -20,9 +20,10 @@ public class SlashCommandAllWishes extends ListenerAdapter {
                     break;
                 case "chest":
                     event.getHook().sendMessage("").addEmbeds(this.createEmbed("Wish 2","a chest to spawn between the Morgeth, the Spirekeeper fight and the Vault that can only be opened with a Glittering Key.","https://d1lss44hh2trtw.cloudfront.net/resize?type=webp&url=https%3A%2F%2Fshacknews-www.s3.amazonaws.com%2Fassets%2Feditorial%2F2018%2F09%2Fdestiny-2-wish-2-second-wish.jpg&width=986&sign=9_JRunUBlJ79usqmdIu-QAB804UIGAVMeg19TkxsGl4")).setEphemeral(true).queue();
-                  case "emblem":
-                      event.getHook().sendMessage("").addEmbeds(this.createEmbed("Wish 3","Unlocks an Emblem.","https://d1lss44hh2trtw.cloudfront.net/resize?type=webp&url=https%3A%2F%2Fshacknews-www.s3.amazonaws.com%2Fassets%2Feditorial%2F2018%2F09%2Fdestiny-2-wish-3-third-wish.jpg&width=986&sign=Ft3fQ85BIKjVhnEWuZNirM9zvZCM6B07GIcWUgz7_So")).setEphemeral(true).queue();
-                       break;
+                    break;
+                case "emblem":
+                    event.getHook().sendMessage("").addEmbeds(this.createEmbed("Wish 3","Unlocks an Emblem.","https://d1lss44hh2trtw.cloudfront.net/resize?type=webp&url=https%3A%2F%2Fshacknews-www.s3.amazonaws.com%2Fassets%2Feditorial%2F2018%2F09%2Fdestiny-2-wish-3-third-wish.jpg&width=986&sign=Ft3fQ85BIKjVhnEWuZNirM9zvZCM6B07GIcWUgz7_So")).setEphemeral(true).queue();
+                    break;
                 case "shuro-chi":
                     event.getHook().sendMessage("").addEmbeds(this.createEmbed("Wish 4","Will immediately wipe the Fireteam and teleport them to the beginning of the fight against Shuro Chi, the Corrupted.","https://d1lss44hh2trtw.cloudfront.net/resize?type=webp&url=https%3A%2F%2Fshacknews-www.s3.amazonaws.com%2Fassets%2Feditorial%2F2018%2F09%2Fdestiny-2-wish-4-fourth-wish.jpg&width=986&sign=uhG8WXFco1c59NLIg1UPJw3SH-xLIJ1pvCKjskKKBnU")).setEphemeral(true).queue();
                     break;
