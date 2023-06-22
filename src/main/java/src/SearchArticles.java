@@ -52,7 +52,7 @@ public class SearchArticles implements Runnable{
         try{
             do{
                 try(final Fetch connection = new Fetch(this.url, this.apiKey) ) {
-                    connection.createConnection();
+                    connection.createConnection("GET");
                     if (connection.statusCode() == 200){
                         JsonElement result = jsonConvert(connection.extractData());
                         String article = result.getAsJsonObject().get("Link").getAsString();

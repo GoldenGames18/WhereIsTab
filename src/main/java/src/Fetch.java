@@ -4,7 +4,6 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Fetch implements AutoCloseable {
@@ -23,9 +22,9 @@ public class Fetch implements AutoCloseable {
         return url;
     }
 
-    public void createConnection() throws IOException {
+    public void createConnection(String type) throws IOException {
         this.connection = (HttpsURLConnection) this.url.openConnection();
-        this.connection.setRequestMethod("GET");
+        this.connection.setRequestMethod(type);
         this.connection.setRequestProperty("X-API-KEY", this.apiKey);
     }
 
