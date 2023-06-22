@@ -18,7 +18,7 @@ public class SlashCommandSubscribeNewsletterTwab extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if(event.getName().equals("subscribe")){
-            event.deferReply().queue();
+            event.deferReply(true).queue();
             try{
                 if (this.newsletterTwab.containsKey(event.getGuild().getId())){
                     event.getHook().sendMessage("You are already registered").setEphemeral(true).queue();

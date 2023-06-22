@@ -4,12 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-
-import javax.net.ssl.HttpsURLConnection;
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -18,20 +14,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SearchArticles implements Runnable{
 
     private ConcurrentHashMap<String, String> newsletterTwab;
-    private String apiKey;
     private JDA jda;
     private boolean isRunning;
+    private String apiKey;
     private URL url;
-
-    private HttpsURLConnection connection;
 
     public SearchArticles(ConcurrentHashMap<String, String> newsletterTwab, String apiKey) {
         this.newsletterTwab = newsletterTwab;
         this.apiKey = apiKey;
-        try{
-            this.url = new URL("https://www.bungie.net/platform/Content/Rss/NewsArticles/0");
-            this.isRunning = true;
-        }catch (MalformedURLException  e){
+        try {
+            this.url =  new URL("https://www.bungie.net/platform/Content/Rss/NewsArticles/0");
+        } catch (MalformedURLException e){
             this.isRunning = false;
         }
     }
@@ -41,26 +34,6 @@ public class SearchArticles implements Runnable{
 
     public void stop(){
         this.isRunning = false;
-        System.out.println("STOP THREAD");
-    }
-
-
-    private int createConnection() throws IOException {
-        this.connection = (HttpsURLConnection) this.url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("X-API-KEY", this.apiKey);
-        return connection.getResponseCode();
-    }
-
-    private JsonElement takeData() throws IOException {
-        String response = "";
-        try(BufferedReader in = new BufferedReader(new InputStreamReader(this.connection.getInputStream()))){
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response += inputLine;
-            }
-        }
-        return jsonConvert(response) ;
     }
 
     private JsonElement jsonConvert(String data){
@@ -70,20 +43,18 @@ public class SearchArticles implements Runnable{
 
     }
 
-    private void closeConnection(){
-        this.connection.disconnect();
-    }
+
 
 
     @Override
     public void run() {
         String link = "";
-        do {
-            try {
-                try {
-                    int code = createConnection();
-                    if (code == 200){
-                        JsonElement result =  takeData();
+        try{
+            do{
+                try(final Fetch connection = new Fetch(this.url, this.apiKey) ) {
+                    connection.createConnection();
+                    if (connection.statusCode() == 200){
+                        JsonElement result = jsonConvert(connection.extractData());
                         String article = result.getAsJsonObject().get("Link").getAsString();
                         if (link.isBlank() || link.isEmpty()){
                             link = article ;
@@ -98,18 +69,19 @@ public class SearchArticles implements Runnable{
                             });
                             builder.clear();
                         }
+                    }else{
+                        System.err.printf("[Error] %s on  %s \n", connection.statusCode(), connection.getUrl());
                     }
-                    closeConnection();
-                    Thread.sleep(20000);
                 } catch (IOException e) {
                     Thread.sleep(20000);
-                } catch (Exception e){
+                }catch (Exception e){
                     Thread.sleep(60000);
                 }
-            } catch (InterruptedException ex) {
-                System.err.println("[ERROR] thread sleep");
-            }
-        }while (this.isRunning);
+                Thread.sleep(20000);
+            }while (this.isRunning);
+        }catch (InterruptedException e){
+            System.err.println("[ERROR] thread sleep on SearchArticle");
+        }
 
 
     }
