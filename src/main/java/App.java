@@ -1,7 +1,9 @@
+import messageReceived.MessageEvent;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import repository.JsonRepository;
 import repository.TomlRepository;
 import net.dv8tion.jda.api.JDA;
@@ -24,18 +26,20 @@ public class App {
 
         SearchArticles searchArticles = new SearchArticles(newsletterTwab, repository.getApiKey());
         try {
-            //Load json file with serveur is subscribe
+            //Load json file with serveur is subscribed
             JsonRepository jsonRepository = new JsonRepository(System.getProperty("user.dir")+"\\resources\\"+ repository.getJsonName());
             newsletterTwab.putAll( jsonRepository.loadSubscribel(newsletterTwab));
 
 
             //Starting the bot with JDA
             JDA jda = JDABuilder.createDefault(repository.getToken())
+                    .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                     .setActivity(Activity.playing("Where is Twab ?"))
                     .addEventListeners(
                             new SlashCommandSubscribeNewsletterTwab(newsletterTwab, jsonRepository),
                             new SlashCommandUnSubscribeNewsletterTwab(newsletterTwab, jsonRepository),
-                            new SlashCommandAllWishes())
+                            new SlashCommandAllWishes(),
+                            new MessageEvent())
                     .build().awaitReady();
             searchArticles.setJda(jda);
             new Thread(searchArticles).start();
