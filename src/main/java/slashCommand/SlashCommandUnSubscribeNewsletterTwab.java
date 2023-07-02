@@ -21,7 +21,7 @@ public class SlashCommandUnSubscribeNewsletterTwab extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
         if (event.getName().equals("unsubscribe")) {
-            event.deferReply().queue();
+            event.deferReply(true).queue();
             try {
                 if (this.newsletterTwab.containsKey(event.getGuild().getId())){
                     String value = newsletterTwab.get(event.getGuild().getId());
